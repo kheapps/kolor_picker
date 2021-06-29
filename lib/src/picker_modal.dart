@@ -1,7 +1,7 @@
 library picker_modal;
 
 import 'package:flutter/material.dart';
-import 'package:kolor_picker/src/kolor_slider.dart';
+import 'rgb_picker.dart';
 
 class PickerModal extends StatefulWidget {
   final Color baseColor;
@@ -59,6 +59,7 @@ class _PickerModalState extends State<PickerModal> {
               ),
             ),
             SizedBox(height: 10),
+            // ? Preview selected color
             Container(
               width: 50,
               height: 50,
@@ -70,15 +71,13 @@ class _PickerModalState extends State<PickerModal> {
                 ),
               ),
             ),
-            KolorSlider(
-              colors: [Colors.black, Colors.red],
-              label: 'R',
-              onChanged: (v) {
+            RGBPicker(
+              onColorChange: (color) {
                 setState(() {
-                  // print("new val : $v");
+                  _currentColor = color;
                 });
               },
-            )
+            ),
           ],
         ),
       ),
