@@ -1,6 +1,7 @@
 library picker_modal;
 
 import 'package:flutter/material.dart';
+import 'package:kolor_picker/src/kolor_slider.dart';
 
 class PickerModal extends StatefulWidget {
   final Color baseColor;
@@ -69,10 +70,14 @@ class _PickerModalState extends State<PickerModal> {
                 ),
               ),
             ),
-            Slider(
-              value: 0,
-              onChanged: (v) {},
-              
+            KolorSlider(
+              colors: [Colors.black, Colors.red],
+              label: 'R',
+              onChanged: (v) {
+                setState(() {
+                  // print("new val : $v");
+                });
+              },
             )
           ],
         ),

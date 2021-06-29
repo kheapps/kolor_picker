@@ -15,10 +15,12 @@ class KolorSlider extends StatefulWidget {
     this.max = 255,
     this.indicatorColor = Colors.white,
     @required this.colors,
+    @required this.label,
     @required this.onChanged,
   })  : assert(onChanged != null),
         assert(colors != null && colors.length >= 2),
         assert(min <= max),
+        assert(label != null && label.length == 1),
         super(key: key);
 
   /// The [width] of the slider
@@ -59,6 +61,12 @@ class KolorSlider extends StatefulWidget {
   ///
   final Color indicatorColor;
 
+  /// The [label] of the slider reprensent the color (R, G or B)
+  ///
+  /// Must be one letter
+  ///
+  final String? label;
+
   /// Called during a drag when the user is selecting a new value for the slider
   /// by dragging.
   ///
@@ -76,51 +84,75 @@ class KolorSlider extends StatefulWidget {
 
 class _KolorSliderState extends State<KolorSlider> {
   double _colorSliderPosition = 0.0;
+  int _value = 0;
 
   @override
   Widget build(BuildContext context) {
     final w = widget.width;
     final h = widget.height;
     final indicatorRadius = (h * 1.5) / 2;
+    final _margin = 15.0;
+    final _touchOffset = indicatorRadius / 2 + _margin;
 
     return Container(
       margin: EdgeInsets.all(15),
       height: h * 2,
-      width: w + indicatorRadius * 2,
+      // width: w + indicatorRadius * 2,
       alignment: Alignment.center,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onHorizontalDragStart: (DragStartDetails details) {
-          _colorChangeHandler(details.localPosition.dx - indicatorRadius / 2);
-        },
-        onHorizontalDragUpdate: (DragUpdateDetails details) {
-          _colorChangeHandler(details.localPosition.dx - indicatorRadius / 2);
-        },
-        onTapDown: (TapDownDetails details) {
-          _colorChangeHandler(details.localPosition.dx - indicatorRadius / 2);
-        },
-        child: Center(
-          // ? SLIDER
-          child: Container(
-            width: w,
-            height: h,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.blueGrey[700]!,
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(h / 2),
-              gradient: LinearGradient(colors: widget.colors!),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Container(
+              // margin: EdgeInsets.only(right: indicatorRadius * 2),
+              alignment: Alignment.center,
+              child: Text(widget.label!),
             ),
-            child: CustomPaint(
-              painter: _SliderIndicatorPainter(
-                _colorSliderPosition,
-                indicatorRadius,
-                widget.indicatorColor,
+          ),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onHorizontalDragStart: (DragStartDetails details) {
+              _colorChangeHandler(details.localPosition.dx - _touchOffset);
+            },
+            onHorizontalDragUpdate: (DragUpdateDetails details) {
+              _colorChangeHandler(details.localPosition.dx - _touchOffset);
+            },
+            onTapDown: (TapDownDetails details) {
+              _colorChangeHandler(details.localPosition.dx - _touchOffset);
+            },
+            child: Center(
+              // ? SLIDER
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: _margin),
+                width: w,
+                height: h,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.blueGrey[700]!,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(h / 2),
+                  gradient: LinearGradient(colors: widget.colors!),
+                ),
+                child: CustomPaint(
+                  painter: _SliderIndicatorPainter(
+                    _colorSliderPosition,
+                    indicatorRadius,
+                    widget.indicatorColor,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+          Expanded(
+            child: Container(
+              // margin: EdgeInsets.only(left: indicatorRadius * 2),
+              alignment: Alignment.center,
+              child: Text('$_value'),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -137,9 +169,9 @@ class _KolorSliderState extends State<KolorSlider> {
     // 0 -> min
     // width -> max
     // pos -> value = (pos*(max-min) / width) + min
-    int value =
+    _value =
         (position * (widget.max - widget.min) ~/ widget.width) + widget.min;
-    widget.onChanged!(value);
+    widget.onChanged!(_value);
   }
 }
 
@@ -174,5 +206,4 @@ class _SliderIndicatorPainter extends CustomPainter {
   }
 }
 
-
-  // Some parts of this widget code is from : https://medium.com/@mhstoller.it/how-i-made-a-custom-color-picker-slider-using-flutter-and-dart-e2350ec693a1
+// Some parts of this widget code is from : https://medium.com/@mhstoller.it/how-i-made-a-custom-color-picker-slider-using-flutter-and-dart-e2350ec693a1
