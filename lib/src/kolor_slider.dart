@@ -11,6 +11,7 @@ class KolorSlider extends StatefulWidget {
     Key? key,
     this.width = 250,
     this.height = 13,
+    this.initValue = 0,
     this.min = 0,
     this.max = 255,
     this.indicatorColor = Colors.white,
@@ -37,15 +38,21 @@ class KolorSlider extends StatefulWidget {
   ///
   final double height;
 
+  /// The initial value of the slider
+  ///
+  /// Default value [initValue] = 0
+  ///
+  final int initValue;
+
   /// Minimum value of the slider
   ///
-  /// Default value = 0
+  /// Default value [min] = 0
   ///
   final int min;
 
   /// Maximum value of the slider
   ///
-  /// Default value = 255
+  /// Default value [max] = 255
   ///
   final int max;
 
@@ -76,7 +83,7 @@ class KolorSlider extends StatefulWidget {
   ///
   ///This callback function is required.
   ///
-  final Function(int)? onChanged;
+  final void Function(int)? onChanged;
 
   @override
   _KolorSliderState createState() => _KolorSliderState();
@@ -85,6 +92,14 @@ class KolorSlider extends StatefulWidget {
 class _KolorSliderState extends State<KolorSlider> {
   double _colorSliderPosition = 0.0;
   int _value = 0;
+
+  @override
+  void initState() {
+    _value = widget.initValue;
+    _colorSliderPosition =
+        (_value - widget.min) * (widget.width / (widget.max - widget.min));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

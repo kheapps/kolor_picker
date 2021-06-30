@@ -1,37 +1,35 @@
 library picker_modal;
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'rgb_picker.dart';
 
-class PickerModal extends StatefulWidget {
-  final Color baseColor;
-  final Function(Color)? onColorPicked;
-
+class PickerModal extends StatelessWidget {
   const PickerModal({
     Key? key,
-    this.baseColor = Colors.greenAccent,
-    this.onColorPicked,
-  }) : super(key: key);
+    this.initColor = Colors.black,
+    @required this.onColorPicked,
+  })  : assert(onColorPicked != null),
+        super(key: key);
 
-  @override
-  _PickerModalState createState() => _PickerModalState(this.baseColor);
-}
+  /// The initial color of the picker
+  ///
+  /// Default value [initColor] = [Colors.black]
+  ///
+  final Color initColor;
 
-class _PickerModalState extends State<PickerModal> {
-  Color _currentColor;
-
-  _PickerModalState(this._currentColor);
-
-  Color get currentColor => _currentColor;
+  /// Callback function [onColorPicked]
+  /// is called when users click on the
+  /// button to confirm their choice.
+  ///
+  final void Function(Color)? onColorPicked;
 
   @override
   Widget build(BuildContext context) {
-    // double w = MediaQuery.of(context).size.width;
-    final media = MediaQuery.of(context);
-    double h = media.size.height;
-    double bottomMargin = media.viewPadding.bottom;
+    Color _currentColor = initColor;
+    final bottomMargin = MediaQuery.of(context).viewPadding.bottom;
     return Container(
-      height: h * 0.67,
       margin: EdgeInsets.only(
         left: 10,
         right: 10,
@@ -52,32 +50,30 @@ class _PickerModalState extends State<PickerModal> {
               width: 50,
               height: 5,
               decoration: BoxDecoration(
-                color: Colors.black45,
+                color: Colors.black38,
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
                 ),
               ),
             ),
-            SizedBox(height: 10),
-            // ? Preview selected color
-            Container(
-              width: 50,
-              height: 50,
-              margin: EdgeInsets.only(top: 10),
-              decoration: BoxDecoration(
-                color: _currentColor,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(25),
-                ),
+            Expanded(
+              child: RGBPicker(
+                initColor: _currentColor,
+                onColorChange: (color) {
+                  _currentColor = color;
+                },
               ),
             ),
-            RGBPicker(
-              onColorChange: (color) {
-                setState(() {
-                  _currentColor = color;
-                });
-              },
+            SizedBox(height: 20),
+            Container(
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: OutlinedButton(
+                onPressed: () => onColorPicked!(_currentColor),
+                child: Text('Ok'),
+              ),
             ),
+            SizedBox(height: 30),
           ],
         ),
       ),

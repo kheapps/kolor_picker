@@ -28,6 +28,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Color _color = Colors.black;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +36,10 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: KolorPicker(),
+        child: KolorPicker(
+          onComplete: (c) => print("Picked color $c"),
+          initColor: _color,
+        ),
       ),
     );
   }
