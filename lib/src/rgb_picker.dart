@@ -10,8 +10,16 @@ class RGBPicker extends StatefulWidget {
   })  : assert(onColorChange != null),
         super(key: key);
 
-  final void Function(Color)? onColorChange;
+  /// The initial color of the picker
+  ///
+  /// Default value [initColor] = [Colors.black]
+  ///
   final Color initColor;
+
+  /// Callback function [onColorChange]
+  /// is called when users update one of the sliders value.
+  ///
+  final void Function(Color)? onColorChange;
 
   @override
   _RGBPickerState createState() => _RGBPickerState();

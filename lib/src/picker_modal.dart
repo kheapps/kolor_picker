@@ -58,7 +58,7 @@ class PickerModal extends StatelessWidget {
             ),
             Expanded(
               child: RGBPicker(
-                initColor: _currentColor,
+                initColor: initColor,
                 onColorChange: (color) {
                   _currentColor = color;
                 },
