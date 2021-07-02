@@ -1,5 +1,7 @@
 library kolor_slider;
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'styles.dart';
@@ -20,6 +22,7 @@ class KolorSlider extends StatefulWidget {
     @required this.colors,
     @required this.label,
     @required this.onChanged,
+    this.useAppTextTheme = false,
   })  : assert(onChanged != null),
         assert(colors != null && colors.length >= 2),
         assert(min <= max),
@@ -87,6 +90,16 @@ class KolorSlider extends StatefulWidget {
   ///
   final void Function(int)? onChanged;
 
+  /// If true the text will use your application custom [textTheme]
+  ///
+  /// The slider label ('R', 'G', 'B') will use [textTheme.bodyText1]
+  ///
+  /// The slider value and picked color hex value will use [textTheme.bodyText2]
+  ///
+  /// By default it is false, it will use a default textTheme.
+  ///
+  final bool useAppTextTheme;
+
   @override
   _KolorSliderState createState() => _KolorSliderState();
 }
@@ -94,25 +107,31 @@ class KolorSlider extends StatefulWidget {
 class _KolorSliderState extends State<KolorSlider> {
   double _colorSliderPosition = 0.0;
   int _value = 0;
+  double _sliderWidth = 0;
 
   @override
   void initState() {
     _value = widget.initValue;
-    _colorSliderPosition =
-        (_value - widget.min) * (widget.width / (widget.max - widget.min));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    const double _margin = 15.0;
     final w = widget.width;
     final h = widget.height;
     final indicatorRadius = (h * 1.5) / 2;
-    final _margin = 15.0;
     final _touchOffset = indicatorRadius / 2 + _margin;
-    
+    final maxWidth = MediaQuery.of(context).size.width * 4 / 9;
+
+    _sliderWidth = min(w, maxWidth);
+    _colorSliderPosition =
+        (_value - widget.min) * (_sliderWidth / (widget.max - widget.min));
+
     return Container(
-      margin: EdgeInsets.all(15),
+      margin: EdgeInsets.all(_margin),
       height: h * 2,
       // width: w + indicatorRadius * 2,
       alignment: Alignment.center,
@@ -126,7 +145,9 @@ class _KolorSliderState extends State<KolorSlider> {
               alignment: Alignment.center,
               child: Text(
                 widget.label!,
-                style: labelTextStyle,
+                style: widget.useAppTextTheme
+                    ? textTheme.bodyText1
+                    : labelTextStyle,
               ),
             ),
           ),
@@ -145,7 +166,7 @@ class _KolorSliderState extends State<KolorSlider> {
               // ? SLIDER
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: _margin),
-                width: w,
+                width: _sliderWidth,
                 height: h,
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -171,7 +192,9 @@ class _KolorSliderState extends State<KolorSlider> {
               alignment: Alignment.center,
               child: Text(
                 '$_value',
-                style: valueTextStyle,
+                style: widget.useAppTextTheme
+                    ? textTheme.bodyText2
+                    : valueTextStyle,
               ),
             ),
           ),
@@ -182,8 +205,8 @@ class _KolorSliderState extends State<KolorSlider> {
 
   _colorChangeHandler(double position) {
     //handle out of bounds positions
-    if (position > widget.width) {
-      position = widget.width;
+    if (position > _sliderWidth) {
+      position = _sliderWidth;
     }
     if (position < 0) {
       position = 0;
@@ -193,7 +216,7 @@ class _KolorSliderState extends State<KolorSlider> {
     // width -> max
     // pos -> value = (pos*(max-min) / width) + min
     _value =
-        (position * (widget.max - widget.min) ~/ widget.width) + widget.min;
+        (position * (widget.max - widget.min) ~/ _sliderWidth) + widget.min;
     widget.onChanged!(_value);
   }
 }

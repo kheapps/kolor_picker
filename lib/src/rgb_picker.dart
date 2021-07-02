@@ -7,6 +7,7 @@ class RGBPicker extends StatefulWidget {
     Key? key,
     @required this.onColorChange,
     this.initColor = Colors.black,
+    this.useAppTextTheme = false,
   })  : assert(onColorChange != null),
         super(key: key);
 
@@ -20,6 +21,16 @@ class RGBPicker extends StatefulWidget {
   /// is called when users update one of the sliders value.
   ///
   final void Function(Color)? onColorChange;
+
+  /// If true the text will use your application custom [textTheme]
+  ///
+  /// The slider label ('R', 'G', 'B') will use [textTheme.bodyText1]
+  ///
+  /// The slider value and picked color hex value will use [textTheme.bodyText2]
+  ///
+  /// By default it is false, it will use a default textTheme.
+  ///
+  final bool useAppTextTheme;
 
   @override
   _RGBPickerState createState() => _RGBPickerState();
@@ -58,6 +69,7 @@ class _RGBPickerState extends State<RGBPicker> {
           SizedBox(height: 30),
           KolorSlider(
             initValue: _r,
+            useAppTextTheme: widget.useAppTextTheme,
             colors: [
               Color.fromARGB(255, 0, _g, _b),
               Color.fromARGB(255, 255, _g, _b)
@@ -70,6 +82,7 @@ class _RGBPickerState extends State<RGBPicker> {
           ),
           KolorSlider(
             initValue: _g,
+            useAppTextTheme: widget.useAppTextTheme,
             colors: [
               Color.fromARGB(255, _r, 0, _b),
               Color.fromARGB(255, _r, 255, _b)
@@ -82,6 +95,7 @@ class _RGBPickerState extends State<RGBPicker> {
           ),
           KolorSlider(
             initValue: _b,
+            useAppTextTheme: widget.useAppTextTheme,
             colors: [
               Color.fromARGB(255, _r, _g, 0),
               Color.fromARGB(255, _r, _g, 255)
