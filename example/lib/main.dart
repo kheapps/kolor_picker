@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: KolorPicker(
-          onComplete: (c) => print("Picked color $c"),
+          onColorPicked: (c) => print("Picked color $c"),
           // useAppTextTheme: true,
         ),
       ),

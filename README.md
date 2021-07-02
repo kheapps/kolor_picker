@@ -43,3 +43,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
 A [BottomSheet] containing the color picker will be opened on [KolorPicker] button click.
 The picked color is being returned thank to [onComplete] callback function.
+
+##### Styling picker text
+
+```dart
+textTheme: ThemeData.light().textTheme.copyWith(
+              bodyText1: TextStyle(
+                fontFamily: 'Rubik',
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                fontSize: 17,
+              ),
+              bodyText2: TextStyle(
+                fontFamily: 'Rubik',
+                color: Colors.blueGrey,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 2,
+                fontSize: 15,
+              ),
+            ),
+```
+
+> bodyText1 is used by slider label ('R', 'G', 'B', 'A')  
+> bodyText2 is used by slider value and picked color value

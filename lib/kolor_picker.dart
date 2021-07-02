@@ -1,5 +1,7 @@
 library kolor_picker;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'src/picker_modal.dart';
@@ -9,7 +11,7 @@ class KolorPicker extends StatelessWidget {
   ///
   /// It gives you a button that trigger a [BottomSheet] modal in wich
   /// the user can choose a color. This color can be accessed thank to the
-  /// [onComplete] callback function.
+  /// [onColorPicked] callback function.
   ///
 
   const KolorPicker({
@@ -20,8 +22,10 @@ class KolorPicker extends StatelessWidget {
     this.icon,
     this.style,
     this.useAppTextTheme = false,
-    @required this.onComplete,
-  })  : assert(onComplete != null),
+    @required this.onColorPicked,
+    this.onComplete,
+    this.onError,
+  })  : assert(onColorPicked != null),
         super(key: key);
 
   /// Set the [width] of the button that trigger the picker.
@@ -62,12 +66,24 @@ class KolorPicker extends StatelessWidget {
 
   /// Callback function to return selected color
   ///
-  /// The [onComplete] function must not be null
+  /// The [onColorPicked] function must not be null
   ///
   /// Paramaters : [Color c]
   /// Return type : void
   ///
-  final void Function(Color)? onComplete;
+  final void Function(Color)? onColorPicked;
+
+  /// Default [onComplete] of [showModalBottomSheet]
+  ///
+  /// If null [onComplete] print 'Modal closed without error.'
+  ///
+  final Future<void> Function()? onComplete;
+
+  /// Default [onError] of [showModalBottomSheet]
+  ///
+  /// If null [onError] print the [error] and [stackTrace]
+  ///
+  final FutureOr<dynamic> Function(Object, StackTrace)? onError;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +112,7 @@ class KolorPicker extends StatelessWidget {
               child: PickerModal(
                 useAppTextTheme: useAppTextTheme,
                 onColorPicked: (c) {
-                  onComplete!(c);
+                  onColorPicked!(c);
                   _pickedColor = c;
                   Navigator.pop(context);
                 },
@@ -104,18 +120,15 @@ class KolorPicker extends StatelessWidget {
               ),
             ),
           )
-            ..onError((e, stackTrace) => _onError(e, stackTrace))
-            ..whenComplete(() => _onComplete());
+            ..onError(
+              onError ??
+                  (e, stackTrace) => print("Error $e\n Stack : $stackTrace"),
+            )
+            ..whenComplete(
+              onComplete ?? () => print("Modal closed without error."),
+            );
         },
       ),
     );
-  }
-
-  _onComplete() {
-    print("modal closed");
-  }
-
-  _onError(e, stackTrace) {
-    print("error" + e + " | " + stackTrace);
   }
 }
