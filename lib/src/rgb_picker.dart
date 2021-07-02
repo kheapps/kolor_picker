@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'kolor_slider.dart';
 
+import 'styles.dart';
+
 class RGBPicker extends StatefulWidget {
   const RGBPicker({
     Key? key,
@@ -49,64 +51,78 @@ class _RGBPickerState extends State<RGBPicker> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // ? Preview selected color
-          Container(
-            width: 50,
-            height: 50,
-            margin: EdgeInsets.only(top: 10),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.blueGrey[700]!, width: 1),
-              color: Color.fromARGB(255, _r, _g, _b),
-              borderRadius: BorderRadius.all(
-                Radius.circular(25),
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // ? Preview selected color
+            Container(
+              width: 50,
+              height: 50,
+              margin: EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueGrey[700]!, width: 1),
+                color: Color.fromARGB(255, _r, _g, _b),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(25),
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 30),
-          KolorSlider(
-            initValue: _r,
-            useAppTextTheme: widget.useAppTextTheme,
-            colors: [
-              Color.fromARGB(255, 0, _g, _b),
-              Color.fromARGB(255, 255, _g, _b)
-            ],
-            label: 'R',
-            onChanged: (v) {
-              _r = v;
-              _updateColor();
-            },
-          ),
-          KolorSlider(
-            initValue: _g,
-            useAppTextTheme: widget.useAppTextTheme,
-            colors: [
-              Color.fromARGB(255, _r, 0, _b),
-              Color.fromARGB(255, _r, 255, _b)
-            ],
-            label: 'G',
-            onChanged: (v) {
-              _g = v;
-              _updateColor();
-            },
-          ),
-          KolorSlider(
-            initValue: _b,
-            useAppTextTheme: widget.useAppTextTheme,
-            colors: [
-              Color.fromARGB(255, _r, _g, 0),
-              Color.fromARGB(255, _r, _g, 255)
-            ],
-            label: 'B',
-            onChanged: (v) {
-              _b = v;
-              _updateColor();
-            },
-          )
-        ],
+            Text(
+              '#' +
+                  Color.fromARGB(255, _r, _g, _b)
+                      .value
+                      .toRadixString(16)
+                      .substring(2),
+              style:
+                  widget.useAppTextTheme ? textTheme.bodyText2 : valueTextStyle,
+            ),
+            SizedBox(height: 10),
+            KolorSlider(
+              initValue: _r,
+              useAppTextTheme: widget.useAppTextTheme,
+              colors: [
+                Color.fromARGB(255, 0, _g, _b),
+                Color.fromARGB(255, 255, _g, _b)
+              ],
+              label: 'R',
+              onChanged: (v) {
+                _r = v;
+                _updateColor();
+              },
+            ),
+            KolorSlider(
+              initValue: _g,
+              useAppTextTheme: widget.useAppTextTheme,
+              colors: [
+                Color.fromARGB(255, _r, 0, _b),
+                Color.fromARGB(255, _r, 255, _b)
+              ],
+              label: 'G',
+              onChanged: (v) {
+                _g = v;
+                _updateColor();
+              },
+            ),
+            KolorSlider(
+              initValue: _b,
+              useAppTextTheme: widget.useAppTextTheme,
+              colors: [
+                Color.fromARGB(255, _r, _g, 0),
+                Color.fromARGB(255, _r, _g, 255)
+              ],
+              label: 'B',
+              onChanged: (v) {
+                _b = v;
+                _updateColor();
+              },
+            )
+          ],
+        ),
       ),
     );
   }
