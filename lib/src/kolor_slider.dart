@@ -2,6 +2,8 @@ library kolor_slider;
 
 import 'package:flutter/material.dart';
 
+import 'styles.dart';
+
 class KolorSlider extends StatefulWidget {
   /// Custom slider for color picking
   /// with a gradient background to preview color changes
@@ -108,7 +110,7 @@ class _KolorSliderState extends State<KolorSlider> {
     final indicatorRadius = (h * 1.5) / 2;
     final _margin = 15.0;
     final _touchOffset = indicatorRadius / 2 + _margin;
-
+    
     return Container(
       margin: EdgeInsets.all(15),
       height: h * 2,
@@ -122,7 +124,10 @@ class _KolorSliderState extends State<KolorSlider> {
             child: Container(
               // margin: EdgeInsets.only(right: indicatorRadius * 2),
               alignment: Alignment.center,
-              child: Text(widget.label!),
+              child: Text(
+                widget.label!,
+                style: labelTextStyle,
+              ),
             ),
           ),
           GestureDetector(
@@ -164,7 +169,10 @@ class _KolorSliderState extends State<KolorSlider> {
             child: Container(
               // margin: EdgeInsets.only(left: indicatorRadius * 2),
               alignment: Alignment.center,
-              child: Text('$_value'),
+              child: Text(
+                '$_value',
+                style: valueTextStyle,
+              ),
             ),
           ),
         ],
