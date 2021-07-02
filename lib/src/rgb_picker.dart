@@ -39,10 +39,11 @@ class RGBPicker extends StatefulWidget {
 }
 
 class _RGBPickerState extends State<RGBPicker> {
-  int _r = 0, _g = 0, _b = 0;
+  int _r = 0, _g = 0, _b = 0, _a = 0;
 
   @override
   void initState() {
+    _a = widget.initColor.alpha;
     _r = widget.initColor.red;
     _g = widget.initColor.green;
     _b = widget.initColor.blue;
@@ -66,18 +67,14 @@ class _RGBPickerState extends State<RGBPicker> {
               margin: EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.blueGrey[700]!, width: 1),
-                color: Color.fromARGB(255, _r, _g, _b),
+                color: Color.fromARGB(_a, _r, _g, _b),
                 borderRadius: BorderRadius.all(
                   Radius.circular(25),
                 ),
               ),
             ),
             Text(
-              '#' +
-                  Color.fromARGB(255, _r, _g, _b)
-                      .value
-                      .toRadixString(16)
-                      .substring(2),
+              '#' + Color.fromARGB(_a, _r, _g, _b).value.toRadixString(16),
               style:
                   widget.useAppTextTheme ? textTheme.bodyText2 : valueTextStyle,
             ),
@@ -120,6 +117,19 @@ class _RGBPickerState extends State<RGBPicker> {
                 _b = v;
                 _updateColor();
               },
+            ),
+            KolorSlider(
+              initValue: _a,
+              useAppTextTheme: widget.useAppTextTheme,
+              colors: [
+                Color.fromARGB(0, 0, 0, 0),
+                Color.fromARGB(255, 0, 0, 0)
+              ],
+              label: 'A',
+              onChanged: (v) {
+                _a = v;
+                _updateColor();
+              },
             )
           ],
         ),
@@ -129,7 +139,7 @@ class _RGBPickerState extends State<RGBPicker> {
 
   _updateColor() {
     setState(() {
-      widget.onColorChange!(Color.fromARGB(255, _r, _g, _b));
+      widget.onColorChange!(Color.fromARGB(_a, _r, _g, _b));
     });
   }
 }
