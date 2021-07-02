@@ -39,53 +39,52 @@ class PickerModal extends StatelessWidget {
     Color _currentColor = initColor;
     final bottomMargin = MediaQuery.of(context).viewPadding.bottom;
     return Container(
+      height: 900,
       margin: EdgeInsets.only(
         left: 10,
         right: 10,
         top: 0,
         bottom: bottomMargin,
       ),
+      padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(15.0)),
       ),
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: 50,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.black38,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            width: 50,
+            height: 5,
+            margin: EdgeInsets.only(bottom: 15),
+            decoration: BoxDecoration(
+              color: Colors.black38,
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
               ),
             ),
-            Expanded(
-              child: RGBPicker(
-                useAppTextTheme: useAppTextTheme,
-                initColor: initColor,
-                onColorChange: (color) {
-                  _currentColor = color;
-                },
-              ),
+          ),
+          Expanded(
+            child: RGBPicker(
+              useAppTextTheme: useAppTextTheme,
+              initColor: initColor,
+              onColorChange: (color) {
+                _currentColor = color;
+              },
             ),
-            SizedBox(height: 20),
-            Container(
-              alignment: Alignment.centerRight,
-              padding: EdgeInsets.symmetric(horizontal: 30),
-              child: OutlinedButton(
-                onPressed: () => onColorPicked!(_currentColor),
-                child: Text('Ok'),
-              ),
+          ),
+          SizedBox(height: 20),
+          Container(
+            alignment: Alignment.centerRight,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: OutlinedButton(
+              onPressed: () => onColorPicked!(_currentColor),
+              child: Text('Ok'),
             ),
-            SizedBox(height: 30),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
