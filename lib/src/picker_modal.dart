@@ -1,7 +1,5 @@
 library picker_modal;
 
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'rgb_picker.dart';
 
@@ -9,6 +7,7 @@ class PickerModal extends StatelessWidget {
   const PickerModal({
     Key? key,
     this.initColor = Colors.black,
+    this.useAppTextTheme = false,
     @required this.onColorPicked,
   })  : assert(onColorPicked != null),
         super(key: key);
@@ -24,6 +23,16 @@ class PickerModal extends StatelessWidget {
   /// button to confirm their choice.
   ///
   final void Function(Color)? onColorPicked;
+
+  /// If true the text will use your application custom [textTheme]
+  ///
+  /// The slider label ('R', 'G', 'B') will use [textTheme.bodyText1]
+  ///
+  /// The slider value and picked color hex value will use [textTheme.bodyText2]
+  ///
+  /// By default it is false, it will use a default textTheme.
+  ///
+  final bool useAppTextTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +67,7 @@ class PickerModal extends StatelessWidget {
             ),
             Expanded(
               child: RGBPicker(
+                useAppTextTheme: useAppTextTheme,
                 initColor: initColor,
                 onColorChange: (color) {
                   _currentColor = color;

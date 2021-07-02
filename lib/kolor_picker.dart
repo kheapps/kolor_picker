@@ -19,6 +19,7 @@ class KolorPicker extends StatelessWidget {
     this.initColor = Colors.black,
     this.icon,
     this.style,
+    this.useAppTextTheme = false,
     @required this.onComplete,
   })  : assert(onComplete != null),
         super(key: key);
@@ -49,16 +50,24 @@ class KolorPicker extends StatelessWidget {
   ///
   final ButtonStyle? style;
 
+  /// If true the text will use your application custom [textTheme]
+  ///
+  /// The slider label ('R', 'G', 'B') will use [textTheme.bodyText1]
+  ///
+  /// The slider value and picked color hex value will use [textTheme.bodyText2]
+  ///
+  /// By default it is false, it will use a default textTheme.
+  ///
+  final bool useAppTextTheme;
+
   /// Callback function to return selected color
   ///
   /// The [onComplete] function must not be null
   ///
   /// Paramaters : [Color c]
-  /// return type void
+  /// Return type : void
   ///
   final void Function(Color)? onComplete;
-
-  static const ButtonStyle _defaultStyle = ButtonStyle();
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +86,7 @@ class KolorPicker extends StatelessWidget {
                 size: 20,
               ),
         ),
-        style: style ?? _defaultStyle,
+        style: style,
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -85,6 +94,7 @@ class KolorPicker extends StatelessWidget {
             enableDrag: true,
             builder: (ctx) => Container(
               child: PickerModal(
+                useAppTextTheme: useAppTextTheme,
                 onColorPicked: (c) {
                   onComplete!(c);
                   _pickedColor = c;
