@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'src/picker_modal.dart';
 
-class KolorPicker extends StatelessWidget {
+class KolorPicker extends StatefulWidget {
   /// [KolorPicker] give you the possibility to pick a color RGB values.
   ///
   /// It gives you a button that trigger a [BottomSheet] modal in wich
@@ -81,26 +81,50 @@ class KolorPicker extends StatelessWidget {
   ///
   final FutureOr<dynamic> Function(Object, StackTrace)? onError;
 
+  @override
+  _KolorPickerState createState() => _KolorPickerState();
+}
+
+class _KolorPickerState extends State<KolorPicker> {
   final _history = <Color>[];
+  Color _pickedColor = Colors.black;
+
+  initState() {
+    _pickedColor = widget.initColor;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Color _pickedColor = initColor;
+    final colorVals = [_pickedColor.red, _pickedColor.green, _pickedColor.blue];
+    final sum = colorVals.reduce((v, e) => v + e);
+
     return Container(
-      width: width,
-      height: height,
+      width: widget.width,
+      height: widget.height,
       alignment: Alignment.center,
-      child: ElevatedButton(
+      child: OutlinedButton(
         child: Container(
           width: double.maxFinite,
           height: double.maxFinite,
-          child: icon ??
+          child: widget.icon ??
               Icon(
                 Icons.colorize,
                 size: 20,
               ),
         ),
-        style: style,
+        style: widget.style ??
+            OutlinedButton.styleFrom(
+              shape: CircleBorder(),
+              side: BorderSide(
+                color: _pickedColor,
+                width: 3,
+                style: BorderStyle.solid,
+              ),
+              primary: Colors.black,
+              onSurface: _pickedColor,
+              shadowColor: _pickedColor,
+            ),
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -109,10 +133,12 @@ class KolorPicker extends StatelessWidget {
             builder: (ctx) => Container(
               child: PickerModal(
                 history: _history,
-                useAppTextTheme: useAppTextTheme,
+                useAppTextTheme: widget.useAppTextTheme,
                 onColorPicked: (c) {
-                  onColorPicked!(c);
-                  _pickedColor = c;
+                  widget.onColorPicked!(c);
+                  setState(() {
+                    _pickedColor = c;
+                  });
                   // * we keep only one occurence of a color
                   if (_history.contains(c)) _history.remove(c);
                   _history.add(c);
@@ -124,8 +150,8 @@ class KolorPicker extends StatelessWidget {
               ),
             ),
           )
-            ..onError(onError ?? (e, stackTrace) {})
-            ..whenComplete(onComplete ?? () {});
+            ..onError(widget.onError ?? (e, stackTrace) {})
+            ..whenComplete(widget.onComplete ?? () {});
         },
       ),
     );

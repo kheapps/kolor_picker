@@ -1,6 +1,8 @@
 library picker_modal;
 
 import 'package:flutter/material.dart';
+
+import 'styles.dart';
 import 'rgb_picker.dart';
 
 class PickerModal extends StatelessWidget {
@@ -41,6 +43,7 @@ class PickerModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     Color _currentColor = initColor;
     final bottomMargin = MediaQuery.of(context).viewPadding.bottom;
 
@@ -99,7 +102,11 @@ class PickerModal extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: OutlinedButton(
                   onPressed: () => onColorPicked!(_currentColor),
-                  child: Text('Ok'),
+                  child: Text(
+                    'Ok',
+                    style:
+                        useAppTextTheme ? textTheme.bodyText1 : labelTextStyle,
+                  ),
                 ),
               ),
             ],
