@@ -14,7 +14,7 @@ class KolorPicker extends StatelessWidget {
   /// [onColorPicked] callback function.
   ///
 
-  const KolorPicker({
+  KolorPicker({
     Key? key,
     this.width = 50,
     this.height = 50,
@@ -75,15 +75,13 @@ class KolorPicker extends StatelessWidget {
 
   /// Default [onComplete] of [showModalBottomSheet]
   ///
-  /// If null [onComplete] print 'Modal closed without error.'
-  ///
   final Future<void> Function()? onComplete;
 
   /// Default [onError] of [showModalBottomSheet]
   ///
-  /// If null [onError] print the [error] and [stackTrace]
-  ///
   final FutureOr<dynamic> Function(Object, StackTrace)? onError;
+
+  final _history = <Color>[];
 
   @override
   Widget build(BuildContext context) {
@@ -110,23 +108,24 @@ class KolorPicker extends StatelessWidget {
             enableDrag: true,
             builder: (ctx) => Container(
               child: PickerModal(
+                history: _history,
                 useAppTextTheme: useAppTextTheme,
                 onColorPicked: (c) {
                   onColorPicked!(c);
                   _pickedColor = c;
+                  // * we keep only one occurence of a color
+                  if (_history.contains(c)) _history.remove(c);
+                  _history.add(c);
+                  if (_history.length > 5) _history.removeAt(0);
+                  // * Close the bottom sheet modal
                   Navigator.pop(context);
                 },
                 initColor: _pickedColor,
               ),
             ),
           )
-            ..onError(
-              onError ??
-                  (e, stackTrace) => print("Error $e\n Stack : $stackTrace"),
-            )
-            ..whenComplete(
-              onComplete ?? () => print("Modal closed without error."),
-            );
+            ..onError(onError ?? (e, stackTrace) {})
+            ..whenComplete(onComplete ?? () {});
         },
       ),
     );
