@@ -110,12 +110,6 @@ class _KolorSliderState extends State<KolorSlider> {
   double _sliderWidth = 0;
 
   @override
-  void initState() {
-    _value = widget.initValue;
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
@@ -127,6 +121,7 @@ class _KolorSliderState extends State<KolorSlider> {
     final maxWidth = MediaQuery.of(context).size.width * 4 / 9;
 
     _sliderWidth = min(w, maxWidth);
+    _value = widget.initValue;
     _colorSliderPosition =
         (_value - widget.min) * (_sliderWidth / (widget.max - widget.min));
 
