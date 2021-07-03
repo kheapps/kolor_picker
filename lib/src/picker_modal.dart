@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'rgb_picker.dart';
 
 class PickerModal extends StatelessWidget {
-  const PickerModal({
+  PickerModal({
     Key? key,
     this.initColor = Colors.black,
     this.useAppTextTheme = false,
     @required this.onColorPicked,
+    this.history,
   })  : assert(onColorPicked != null),
         super(key: key);
 
@@ -34,10 +35,23 @@ class PickerModal extends StatelessWidget {
   ///
   final bool useAppTextTheme;
 
+  /// Last 5 colors picked.
+  ///
+  final List<Color>? history;
+
   @override
   Widget build(BuildContext context) {
     Color _currentColor = initColor;
     final bottomMargin = MediaQuery.of(context).viewPadding.bottom;
+
+    final picker = RGBPicker(
+      useAppTextTheme: useAppTextTheme,
+      initColor: initColor,
+      onColorChange: (color) {
+        _currentColor = color;
+      },
+    );
+
     return Container(
       height: 900,
       margin: EdgeInsets.only(
@@ -67,24 +81,47 @@ class PickerModal extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: RGBPicker(
-              useAppTextTheme: useAppTextTheme,
-              initColor: initColor,
-              onColorChange: (color) {
-                _currentColor = color;
-              },
-            ),
+            child: picker,
           ),
           SizedBox(height: 20),
-          Container(
-            alignment: Alignment.centerRight,
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: OutlinedButton(
-              onPressed: () => onColorPicked!(_currentColor),
-              child: Text('Ok'),
-            ),
+          Row(
+            children: [
+              if (history != null)
+                Expanded(
+                  child: Row(
+                    children: history!.reversed
+                        .map((c) => _historyButton(c, picker))
+                        .toList(),
+                  ),
+                ),
+              Container(
+                alignment: Alignment.centerRight,
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: OutlinedButton(
+                  onPressed: () => onColorPicked!(_currentColor),
+                  child: Text('Ok'),
+                ),
+              ),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _historyButton(Color c, RGBPicker picker) {
+    return Container(
+      width: 30,
+      height: 30,
+      margin: EdgeInsets.all(3),
+      child: OutlinedButton(
+        onPressed: () {
+          picker.state.updateColor(c);
+        },
+        style: OutlinedButton.styleFrom(
+          backgroundColor: c,
+        ),
+        child: Container(),
       ),
     );
   }

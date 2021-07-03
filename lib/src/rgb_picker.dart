@@ -5,7 +5,7 @@ import 'kolor_slider.dart';
 import 'styles.dart';
 
 class RGBPicker extends StatefulWidget {
-  const RGBPicker({
+  RGBPicker({
     Key? key,
     @required this.onColorChange,
     this.initColor = Colors.black,
@@ -34,8 +34,12 @@ class RGBPicker extends StatefulWidget {
   ///
   final bool useAppTextTheme;
 
+  final _state = _RGBPickerState();
+
+  _RGBPickerState get state => _state;
+
   @override
-  _RGBPickerState createState() => _RGBPickerState();
+  _RGBPickerState createState() => _state;
 }
 
 class _RGBPickerState extends State<RGBPicker> {
@@ -141,5 +145,13 @@ class _RGBPickerState extends State<RGBPicker> {
     setState(() {
       widget.onColorChange!(Color.fromARGB(_a, _r, _g, _b));
     });
+  }
+
+  updateColor(Color c) {
+    _a = c.alpha;
+    _r = c.red;
+    _g = c.green;
+    _b = c.blue;
+    _updateColor();
   }
 }
