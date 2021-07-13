@@ -6,7 +6,7 @@ import 'styles.dart';
 import 'rgb_picker.dart';
 
 class PickerModal extends StatelessWidget {
-  PickerModal({
+  const PickerModal({
     Key? key,
     this.initColor = Colors.black,
     this.useAppTextTheme = false,

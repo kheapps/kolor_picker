@@ -96,9 +96,6 @@ class _KolorPickerState extends State<KolorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    final colorVals = [_pickedColor.red, _pickedColor.green, _pickedColor.blue];
-    final sum = colorVals.reduce((v, e) => v + e);
-
     return Container(
       width: widget.width,
       height: widget.height,
@@ -138,11 +135,11 @@ class _KolorPickerState extends State<KolorPicker> {
                   widget.onColorPicked!(c);
                   setState(() {
                     _pickedColor = c;
+                    // * we keep only one occurence of a color
+                    if (_history.contains(c)) _history.remove(c);
+                    _history.add(c);
+                    if (_history.length > 5) _history.removeAt(0);
                   });
-                  // * we keep only one occurence of a color
-                  if (_history.contains(c)) _history.remove(c);
-                  _history.add(c);
-                  if (_history.length > 5) _history.removeAt(0);
                   // * Close the bottom sheet modal
                   Navigator.pop(context);
                 },
