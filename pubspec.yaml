@@ -1,7 +1,6 @@
 name: kolor_picker
 description: Color picker package.
 version: 0.0.1
-author: Kheapps
 homepage: https://github.com/kheapps/kolor_picker.git
 
 environment:
