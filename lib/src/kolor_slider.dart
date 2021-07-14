@@ -116,8 +116,8 @@ class _KolorSliderState extends State<KolorSlider> {
     const double _margin = 15.0;
     final w = widget.width;
     final h = widget.height;
-    final indicatorRadius = (h * 1.5) / 2;
-    final _touchOffset = indicatorRadius / 2 + _margin;
+    final indicatorRadius = (h * 1.5) / 2; //9.75
+    final _touchOffset = indicatorRadius / 2 + _margin; //19.875 
     final maxWidth = MediaQuery.of(context).size.width * 4 / 9;
 
     _sliderWidth = min(w, maxWidth);

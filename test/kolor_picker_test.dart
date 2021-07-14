@@ -30,6 +30,7 @@ void main() {
     'Kolor picker modal test',
     (WidgetTester tester) async {
       const initColor = 0xff030507;
+      const modifiedColor = 0xff7f0507;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -48,7 +49,8 @@ void main() {
       expect(find.byType(RGBPicker), findsOneWidget);
 
       print("Test presence sliders");
-      expect(find.byType(KolorSlider), findsNWidgets(4));
+      final sliders = find.byType(KolorSlider);
+      expect(sliders, findsNWidgets(4));
 
       print("Test presence texts");
       final texts = find.byType(Text);
@@ -69,6 +71,22 @@ void main() {
       expect(blueValue, "7");
       print("Test alpha value");
       expect(alphaValue, "255");
+
+      final redSlider = find
+          .descendant(
+            of: find.byType(KolorSlider),
+            matching: find.byType(GestureDetector),
+          )
+          .at(0);
+
+      await tester.tapAt(tester.getCenter(redSlider).translate(5, 0));
+      await tester.pump(Duration(seconds: 1));
+
+      print("Test tap at center of slider changes color");
+      final redText =
+          (find.byType(Text).at(2).evaluate().first.widget as Text).data;
+      expect(redText, "127");
+      expect(find.text("#${modifiedColor.toRadixString(16)}"), findsOneWidget);
     },
   );
 }
